@@ -1,0 +1,24 @@
+{
+  "name": "video-poker",
+  "version": "0.0.1",
+  "description": "Web-Based video poker terminal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/timondavis/video-poker-terminal.git"
+  },
+  "author": "Timon Davis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/timondavis/video-poker-terminal/issues"
+  },
+  "homepage": "https://github.com/timondavis/video-poker-terminal",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "node-sass": "^3.2.0"
+  }
+}
