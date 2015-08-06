@@ -1,0 +1,21 @@
+{
+  "name": "Video Poker",
+  "main": "index.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/timondavis/video-poker-terminal",
+  "authors": [
+    "Timon Davis <timondavis@yahoo.com>"
+  ],
+  "description": "Web Video Poker Terminal",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}
