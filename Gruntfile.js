@@ -6,27 +6,27 @@ module.exports = function( grunt ) {
     'sass': {
       'dist': { 
         'files': { 
-          'static/style/css/style.css': 'static/style/scss/style.scss'
+          'core/app/public/style/css/style.css': 'core/app/public/style/scss/style.scss'
         }
       }
     },
     'watch': { 
       'css': { 
-        'files': 'static/style/scss/**/*.scss',
+        'files': 'core/app/public/style/scss/**/*.scss',
         'tasks': ['sass'],
         'options': {
           'livereload': true  
         }
       },
-      'html': {
-        'files': '**/*.html',
+      'jade': {
+        'files': 'core/app/public/view/**/*.jade',
         'tasks': ['sass'],
         'options': { 
           'livereload': true,
         }
       },
       'js': {
-        'files': '**/*.js',
+        'files': 'core/app/public/**/*.js',
         'tasks': ['sass'],
         'options': { 
           'livereload': true,

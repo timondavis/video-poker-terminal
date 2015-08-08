@@ -1,5 +1,10 @@
-var connect = require('connect');
-var serveStatic = require('serve-static');
-connect().use(serveStatic(__dirname)).listen(3000);
+var express = require( './core/server/config/express.js' );
 
-console.log( 'Video Poker Terminal now listening on port 3000' );
+var app = express();
+
+app.listen( 3000 );
+module.exports = app;
+
+console.log( '-------------------------------------------' );
+console.log( 'Video Poker Terminal listening on port 3000' );
+console.log( '-------------------------------------------' );
