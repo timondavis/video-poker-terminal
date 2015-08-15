@@ -27,6 +27,7 @@ module.exports = function () {
   app.set( 'view engine', 'jade' );
 
   require( '../route/index.server.route.js' )( app );
+  require( '../route/cards.server.route.js' )( app );
 
   app.use( '/public', express.static( 'core/app/public' ));
 
