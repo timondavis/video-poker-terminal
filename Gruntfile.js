@@ -19,7 +19,7 @@ module.exports = function( grunt ) {
         }
       },
       'jade': {
-        'files': 'core/app/public/view/**/*.jade',
+        'files': 'core/server/view/**/*.jade',
         'tasks': ['sass'],
         'options': { 
           'livereload': true,

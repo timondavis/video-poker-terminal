@@ -1,2 +1,43 @@
 body {
-  background: blue; }
+  background: green; }
+
+#play-area {
+  height: 265px;
+  padding: 8px 0;
+  background: #0a500a;
+  border-radius: 45px;
+  border: 12px double #149614; }
+
+#button-area {
+  border: 1px solid black;
+  margin-top: 20px;
+  height: 50px;
+  padding: 7px 0; }
+  #button-area button {
+    margin-left: 10px; }
+    #button-area button.pull-right {
+      margin-left: 0;
+      margin-right: 10px; }
+
+.card-placeholder {
+  height: 222px;
+  width: 15%;
+  margin-left: 4%; }
+  .card-placeholder .a-card img {
+    width: 100%;
+    height: 222px;
+    cursor: pointer;
+    padding: 10px;
+    transition-duration: .5s; }
+    .card-placeholder .a-card img:hover {
+      padding: 0;
+      transition-delay: 0.2s; }
+  .card-placeholder .a-card.shrink img {
+    padding: 30px;
+    transition-duration: 1s; }
+  .card-placeholder .a-card.flipped img {
+    transform: rotateY(180deg);
+    transition-duration: 1s; }
+  .card-placeholder .a-card.faceup img {
+    transform: rotateY(0deg);
+    transition-duration: 1s; }

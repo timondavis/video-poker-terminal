@@ -27,13 +27,8 @@ exports.drawCards = function( req, res ) {
 
       var newCards = data.cards;      
 
-      console.log( newCards );
-
-      cards.addToPile( 'player_' + player_id, newCards, function( err, data ) { 
-
-        data.cards = newCards;
-        res.json( data );
-      });
+      data.cards = newCards;
+      res.json( data );
     }
   );
 };
