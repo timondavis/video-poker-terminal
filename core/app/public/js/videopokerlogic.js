@@ -42,7 +42,7 @@ var videoPokerLogic = function() {
 	function scan_HighCard() {
 
 		that.Values.High_Card.present = true;
-		that.Values.High_Card.composition = [0];
+		that.Values.High_Card.composition = [[0]];
 
 		return true;
 	}
@@ -56,7 +56,7 @@ var videoPokerLogic = function() {
 		if ( ! scan_StraightFlush() ) { return false; }
 
 		that.Values.Royal_Flush.present = true;
-		that.Values.High_Card.composition = [0, 1, 2, 3, 4];
+		that.Values.High_Card.composition = [[0, 1, 2, 3, 4]];
 		return true;
 	}
 	this.Scan_RoyalFlush = function() { return scan_RoyalFlush(); };
@@ -66,7 +66,7 @@ var videoPokerLogic = function() {
 		if ( scan_Straight() && scan_Flush() ) { 
 
 			that.Values.Straight_Flush.present = true;
-			that.Values.Straight_Flush.composition = [0, 1, 2, 3, 4];
+			that.Values.Straight_Flush.composition = [[0, 1, 2, 3, 4]];
 			return true;
 		}
 		return false; 
@@ -108,7 +108,7 @@ var videoPokerLogic = function() {
 			 values[3] == ( values[4] + 1 ) )
 		{
 			that.Values.Straight.present = true;
-			that.Values.Straight.composition = [0, 1, 2, 3, 4];
+			that.Values.Straight.composition = [[0, 1, 2, 3, 4]];
 			return true;
 		}
 
@@ -129,7 +129,7 @@ var videoPokerLogic = function() {
 		if ( flush ) { 
 
 			that.Values.Flush.present = true;
-			that.Values.Straight.composition = [0, 1, 2, 3, 4];
+			that.Values.Straight.composition = [[0, 1, 2, 3, 4]];
 			return true;
 		}
 
@@ -224,17 +224,16 @@ var videoPokerLogic = function() {
 		for ( var iter = 0 ; iter < 5 ; iter++ ) { 
 
 
-			if ( seekMatches( iter ) >= 2 ) { 
+			if ( seekMatches( iter ).length >= 2 ) { 
 
 				matchResults.push( seekMatches( iter ));
-
-				that.Values.Pair.present = true;
-				that.Values.Pair.composition = uniq( matchResults );
 			}
 		}
 
-		if ( _.uniq( matchResults.length >= 2 ) ) { 
+		if ( matchResults.length >= 1 ) { 
 
+			that.Values.Pair.present = true;
+			that.Values.Pair.composition = cleanComposition( matchResults );
 			return true;
 		}
 
@@ -242,22 +241,64 @@ var videoPokerLogic = function() {
 	}
 	this.Scan_Pair = function() { return scan_Pair(); }
 
-	function seekMatches( sortPos ) { 
+	function seekMatches( sortPos, byDisplayPosition ) { 
+
+		if ( typeof byDisplayPosition === 'undefined' ) { 
+
+			byDisplayPosition = true;
+		}
 
 		var cardVal = getValueCode( that.sorted[sortPos].code );
 		var cardSuit = getSuitCode( that.sorted[sortPos].code );
 
 		var hits = [];
-		for( var iter = 0; iter < that.sorted.length ; iter++) {
+		var handSize = _.toArray( that.cards ).length;
 
-			if ( getValueCode( that.sorted[iter].code ) == cardVal &&
-				 getSuitCode( that.sorted[iter].code ) != cardSuit ) { 
+		if ( byDisplayPosition ) { 
 
-				hits.push( iter );
+			for( var iter = 1 ; iter <= handSize ; iter++) {
+
+				var invocation = 'pos_' + iter;
+	
+				if ( getValueCode( that.cards[invocation].code ) == cardVal ) {
+	
+					hits.push( iter );
+				}
+			}
+		}
+		else { 
+
+			for( var iter = 0 ; iter < that.sorted.length ; iter++) {
+	
+				if ( getValueCode( that.sorted[iter].code ) == cardVal ) {
+	
+					hits.push( iter );
+				}
 			}
 		}
 		
 		return hits;	
+	}
+
+	function cleanComposition( composition ) { 
+
+		for( var iterWrapper = 0 ; iterWrapper < composition.length ; iterWrapper++ ) { 
+
+			composition[iterWrapper].sort();
+		}
+
+		for( var iterWrapper = 0 ; iterWrapper < composition.length ; iterWrapper++ ) { 
+
+			for ( var iterParallel = 0; iterParallel < composition.length ; iterParallel++ ) {
+
+				if ( arrEquals( composition[iterWrapper], composition[iterParallel])) { 
+
+					composition.splice( iterParallel, 1);	
+				}
+			}
+		}
+
+		return composition;
 	}
 
 	// sort cards by value
@@ -394,6 +435,21 @@ var videoPokerLogic = function() {
 					break;
 		}
 	}
+
+	function arrEquals( arr1, arr2 ) { 
+
+		if ( arr1.length != arr2.length ) { return false; }
+		var hasIntegrity = true;
+
+		for ( var iter = 0 ; iter < arr1.length ; iter++ ) {
+
+			if( arr1[iter] != arr2[iter] ) { hasIntegrity = false; break; }	
+		}
+
+		return hasIntegrity;
+	}
 }
+
+
 
 window.PokerBrain.Logic = new videoPokerLogic(); 
