@@ -5,7 +5,7 @@ body {
 h1 {
   text-align: center; }
 
-#message-area {
+#message-area, #payout-area {
   height: 50px;
   text-align: center;
   font-family: Arial;

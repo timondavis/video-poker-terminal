@@ -13,7 +13,9 @@ $(document).ready( function($) {
 window.PokerBrain = {
   cards: {},
   cardback: 'public/asset/image/cardback.png',
-  winners: []
+  winners: [],
+  score: 100,
+  bet: 0
 };
 
 function init() { 
@@ -26,6 +28,7 @@ function init() {
 
         drawCards();
         $( '#message-area' ).text( '' );
+        $( '#score-bar .value-value' ).text( PokerBrain.score )
       }
     }
   );
@@ -158,6 +161,7 @@ function bet() {
 
   setBetButtonsEnabled( false );
   setDrawButtonEnabled( true );
+  $( '#payout-area' ).text( '' );
 }
 
 function setBetButtonsEnabled( swtch ) { 
@@ -190,6 +194,7 @@ function draw() {
         PokerBrain.Logic.Init();
         PokerBrain.winners = PokerBrain.Logic.Scan();
         drawWinner();
+        payout();
       }
     }
   );  
@@ -221,12 +226,32 @@ function countFlippedCards() {
   return $( '.flipped' ).length;
 }
 
+function payout() { 
+
+  var payout = PokerBrain.bet * PokerBrain.winners[0].value
+  PokerBrain.score += payout;
+
+  $( '#payout-area' ).text( 'Payout: ' + payout );
+  $( '#score-bar .value-value' ).text( PokerBrain.score );
+
+  if ( PokerBrain.score <= 0 ) { 
+
+    $( '#message-area' ).text( 'Game Over' );
+    $( 'button' ).attr( 'disabled', true );
+  }
+}
+
 function evtDrawClicked( e ) { 
 
   draw();
 }
 
 function evtBetClicked( e ) { 
+
+  PokerBrain.bet = $(this).attr( 'data-bet-value' );
+  if ( PokerBrain.score < PokerBrain.bet ) { return; }
+
+  PokerBrain.score -= PokerBrain.bet;
 
   bet();
 }
