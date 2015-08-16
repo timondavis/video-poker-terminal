@@ -36,7 +36,7 @@ function init() {
 
 var drawCards = function drawCards( numCards ) {
 
-  //var hand = '7H,6H,2S,AD,8H';
+  //var hand = 'AH,AD,AC,QH,QD';
   //$.ajax( 'poker/test/' + hand,
   $.ajax( 'poker/deck/1/draw/5/1',
     {

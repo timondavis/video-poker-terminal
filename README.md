@@ -1,12 +1,14 @@
 #Video Poker Terminal
 
+##Installation Instructions
+
+1.  Pull down the repository
+2.  In the project root, run 'nmp install' (1 time only)
+3.  In the project root, run 'bower install' (1 time only)
+4.  In the project root, run 'node index'
+5.  In your browser, visit 'localhost:3000'
+
 ##Version History
 
-###0.0.0.2
-- Initial documentation complete
-
-###0.0.1.0
-- Setup project to use node.js as delivery platform
-
-###0.0.2.0
-- Moved files around into a more standard app development strcuture
+###0.1.0.0
+Initial Version
