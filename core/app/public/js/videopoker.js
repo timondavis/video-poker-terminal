@@ -2,16 +2,7 @@ $(document).ready( function($) {
 
   var brain = window.PokerBrain;
 
-  $.ajax( 'poker/deck/new',
-    {
-      'dataType': 'json',
-      'crossDomain': false,
-      'success' : function( data, status, req ) { 
-
-        drawCards();
-      }
-    }
-  );
+  init();
 
   $( '.btn-bet' ).click( evtBetClicked );
   $( '.btn-draw' ).click( evtDrawClicked );
@@ -21,14 +12,30 @@ $(document).ready( function($) {
 // This is the global manager for the game.
 window.PokerBrain = {
   cards: {},
-  cardback: 'public/asset/image/cardback.png'
+  cardback: 'public/asset/image/cardback.png',
+  winners: []
 };
+
+function init() { 
+
+  $.ajax( 'poker/deck/new',
+    {
+      'dataType': 'json',
+      'crossDomain': false,
+      'success' : function( data, status, req ) { 
+
+        drawCards();
+        $( '#message-area' ).text( '' );
+      }
+    }
+  );
+}
 
 var drawCards = function drawCards( numCards ) {
 
-  // $.ajax( 'poker/deck/1/draw/5/1',
-  var hand = 'AS,JS,QS,0S,KS';
-  $.ajax( 'poker/test/' + hand,
+  //var hand = '7H,6H,2S,AD,8H';
+  //$.ajax( 'poker/test/' + hand,
+  $.ajax( 'poker/deck/1/draw/5/1',
     {
       'dataType': 'json',
       'crossDomain': false,
@@ -38,6 +45,7 @@ var drawCards = function drawCards( numCards ) {
         renderCards();
         initCards();
         window.PokerBrain.Logic.Init();
+        window.PokerBrain.winners = window.PokerBrain.Logic.Scan();
       }
     }
   );
@@ -71,11 +79,31 @@ function renderCard( pos_id, card ) {
   var place = $( '#card-' + pos_id );
 
   var cardString = '';
-  cardString += '<div data-card-code="' + card.code + '" data-card-pref="keep" data-card-image="' + card.image + '" data-card-pos="' + pos_id + '" class="a-card">';
-    cardString += '<img src="' + card.image + '" alt="' + card.value + ' of ' + card.suit + '" />';
+  cardString += '<div data-card-code="' + card.code + '" data-card-pref="keep" ' + 
+    'data-card-image="' + card.image + '" data-card-pos="' + pos_id + '" class="a-card">';
+  cardString += '<img src="' + card.image + '" alt="' + card.value + ' of ' + card.suit + '" />';
   cardString += '</div>';
 
   place.html( cardString );
+}
+
+function drawWinner() { 
+
+  var winningHand = PokerBrain.winners[0];
+  var composition = winningHand.composition;
+  var name = winningHand.name;
+
+  for ( var iterComp = 0 ; iterComp < composition.length ; iterComp++ ) { 
+
+    for ( var iter = 0 ; iter < composition[iterComp].length ; iter++ ) {
+
+      var handPosition = composition[iterComp][iter]; 
+
+      $( '[data-card-pos="' + handPosition + '"]' ).addClass( 'highlight' );
+    }
+  }
+
+  $( '#message-area' ).text( name );
 }
 
 function flipCard( pos_id ) { 
@@ -126,6 +154,8 @@ function initCards() {
 
 function bet() { 
 
+  init();
+
   setBetButtonsEnabled( false );
   setDrawButtonEnabled( true );
 }
@@ -157,6 +187,9 @@ function draw() {
 
         renderCards();
         initCards();
+        PokerBrain.Logic.Init();
+        PokerBrain.winners = PokerBrain.Logic.Scan();
+        drawWinner();
       }
     }
   );  

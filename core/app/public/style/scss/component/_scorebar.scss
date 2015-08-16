@@ -1,0 +1,19 @@
+#score-bar { 
+
+	font-size: 40px;
+	padding: 0 15px;
+
+	.value-label { 
+
+		width: 130px;
+		border-right: 1px solid black;
+		height: 100%;
+	}
+
+	.value-value { 
+
+		position: relative;
+		margin-left: 10px;
+
+	}
+}

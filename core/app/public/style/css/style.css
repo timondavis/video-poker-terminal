@@ -1,7 +1,20 @@
 body {
-  background: green; }
+  background: green;
+  padding: 0 !important; }
+
+h1 {
+  text-align: center; }
+
+#message-area {
+  height: 50px;
+  text-align: center;
+  font-family: Arial;
+  font-size: 50px;
+  line-height: 70px;
+  color: black; }
 
 #play-area {
+  margin-top: 100px;
   height: 265px;
   padding: 8px 0;
   background: #0a500a;
@@ -19,6 +32,14 @@ body {
       margin-left: 0;
       margin-right: 10px; }
 
+#score-bar {
+  position: fixed;
+  bottom: 3px;
+  height: 60px;
+  border: 2px groove #144614;
+  border-radius: 8px;
+  background-color: #969696; }
+
 .card-placeholder {
   height: 222px;
   width: 15%;
@@ -32,12 +53,23 @@ body {
     .card-placeholder .a-card img:hover {
       padding: 0;
       transition-delay: 0.2s; }
-  .card-placeholder .a-card.shrink img {
-    padding: 30px;
-    transition-duration: 1s; }
+  .card-placeholder .a-card.highlight img {
+    border: 7px solid #6464fa;
+    border-radius: 13px; }
   .card-placeholder .a-card.flipped img {
     transform: rotateY(180deg);
     transition-duration: 1s; }
   .card-placeholder .a-card.faceup img {
     transform: rotateY(0deg);
     transition-duration: 1s; }
+
+#score-bar {
+  font-size: 40px;
+  padding: 0 15px; }
+  #score-bar .value-label {
+    width: 130px;
+    border-right: 1px solid black;
+    height: 100%; }
+  #score-bar .value-value {
+    position: relative;
+    margin-left: 10px; }

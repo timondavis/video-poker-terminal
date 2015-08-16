@@ -7,22 +7,50 @@ var videoPokerLogic = function() {
 
 	this.Values = {
 
-		'Royal_Flush':    	{ 'value': 500, 'composition': [], 'present': false },
-		'Straight_Flush': 	{ 'value': 100, 'composition': [], 'present': false },
-		'Four_of_a_Kind': 	{ 'value': 50,  'composition': [], 'present': false },
-		'Straight': 	  	{ 'value': 30,  'composition': [], 'present': false },
-		'Flush':			{ 'value': 25,  'composition': [], 'present': false },
-		'Full_House':		{ 'value': 10, 	'composition': [], 'present': false },
-		'Three_of_a_Kind':  { 'value': 5,   'composition': [], 'present': false },
-		'Two_Pair': 		{ 'value': 2,   'composition': [], 'present': false },
-		'Pair': 			{ 'value': 1,   'composition': [], 'present': false },
-		'High_Card':      	{ 'value': 0,   'composition': [], 'present': false }
+		'Royal_Flush':    	{ 'name': 'Royal Flush',     'value': 500, 'composition': [], 'present': false },
+		'Straight_Flush': 	{ 'name': 'Straight Flush',  'value': 100, 'composition': [], 'present': false },
+		'Four_of_a_Kind': 	{ 'name': 'Four of a Kind',  'value': 50,  'composition': [], 'present': false },
+		'Full_House':		{ 'name': 'Full House',      'value': 25,  'composition': [], 'present': false },
+		'Flush':			{ 'name': 'Flush',           'value': 15,  'composition': [], 'present': false },
+		'Straight': 	  	{ 'name': 'Straight',        'value': 10,  'composition': [], 'present': false },
+		'Three_of_a_Kind':  { 'name': 'Three of a Kind', 'value': 5,   'composition': [], 'present': false },
+		'Two_Pair': 		{ 'name': 'Two Pair',        'value': 2,   'composition': [], 'present': false },
+		'Pair': 			{ 'name': 'Pair',            'value': 1,   'composition': [], 'present': false },
+		'High_Card':      	{ 'name': 'High Card',       'value': 0,   'composition': [], 'present': false }
 	}
 
 	this.Init = function Init() { 
 
 		that.sorted = _.toArray( this.cards );
 		that.Sort();
+	}
+
+	this.Scan = function Scan() { 
+
+		resetValues();
+
+		scan_RoyalFlush();
+		scan_StraightFlush();
+		scan_FourOfAKind();
+		scan_FullHouse();
+		scan_Flush();
+		scan_Straight();
+		scan_ThreeOfAKind();
+		scan_TwoPair();
+		scan_Pair();
+		scan_HighCard();
+
+		var winners = _.filter( that.Values, function( item ) { 
+
+			return ( item.present )
+		});
+
+		_.sortBy( winners, function( item ) { 
+
+			return item.value;
+		});
+
+		return winners;
 	}
 
 	this.Sort = function Sort() { 
@@ -32,7 +60,7 @@ var videoPokerLogic = function() {
 
 	function resetValues() { 
 
-		$.each( this.Values, function( hand ) {
+		_.each( that.Values, function( hand ) {
 
 			hand.composition = [];
 			hand.present = false;
