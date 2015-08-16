@@ -26,7 +26,8 @@ window.PokerBrain = {
 
 var drawCards = function drawCards( numCards ) {
 
-  $.ajax( 'poker/deck/1/draw/5/1',
+ // $.ajax( 'poker/deck/1/draw/5/1',
+  $.ajax( 'poker/test/AS,2S,3S,4S,5S',
     {
       'dataType': 'json',
       'crossDomain': false,

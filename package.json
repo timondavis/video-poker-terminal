@@ -33,6 +33,7 @@
     "method-override": "^2.3.5",
     "morgan": "^1.6.1",
     "node-of-cards": "^1.0.0",
-    "serve-static": "^1.10.0"
+    "serve-static": "^1.10.0",
+    "underscore": "^1.8.3"
   }
 }
