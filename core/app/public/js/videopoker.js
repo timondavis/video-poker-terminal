@@ -27,7 +27,7 @@ window.PokerBrain = {
 var drawCards = function drawCards( numCards ) {
 
   // $.ajax( 'poker/deck/1/draw/5/1',
-  var hand = 'AS,AC,KS,4C,KD';
+  var hand = 'AS,JS,QS,0S,KS';
   $.ajax( 'poker/test/' + hand,
     {
       'dataType': 'json',
@@ -41,7 +41,6 @@ var drawCards = function drawCards( numCards ) {
       }
     }
   );
-
 }
 
 function writeNewHand( data ) {

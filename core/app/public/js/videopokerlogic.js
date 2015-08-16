@@ -41,8 +41,25 @@ var videoPokerLogic = function() {
 
 	function scan_HighCard() {
 
+		var targetSuit = that.sorted[0].suit;
+		var targetValue = that.sorted[0].value;
+
+		var targetPos = 0;
+
+
+		for ( var iter = 1 ; iter <= that.sorted.length ; iter++) { 
+
+			var invoker = 'pos_' + iter;
+
+			if ( that.cards[invoker].suit == targetSuit &&
+				 that.cards[invoker].value == targetValue ) { 
+
+				targetPos = iter;	
+			}
+		}
+
 		that.Values.High_Card.present = true;
-		that.Values.High_Card.composition = [[0]];
+		that.Values.High_Card.composition = [[targetPos]];
 
 		return true;
 	}
@@ -56,7 +73,7 @@ var videoPokerLogic = function() {
 		if ( ! scan_StraightFlush() ) { return false; }
 
 		that.Values.Royal_Flush.present = true;
-		that.Values.High_Card.composition = [[0, 1, 2, 3, 4]];
+		that.Values.Royal_Flush.composition = [[1, 2, 3, 4, 5]];
 		return true;
 	}
 	this.Scan_RoyalFlush = function() { return scan_RoyalFlush(); };
@@ -66,31 +83,35 @@ var videoPokerLogic = function() {
 		if ( scan_Straight() && scan_Flush() ) { 
 
 			that.Values.Straight_Flush.present = true;
-			that.Values.Straight_Flush.composition = [[0, 1, 2, 3, 4]];
+			that.Values.Straight_Flush.composition = [[1, 2, 3, 4, 5]];
 			return true;
 		}
 		return false; 
 	}
-	this.Scan_StraightFlush = function() { return straightFlush(); }
+	this.Scan_StraightFlush = function() { return scan_StraightFlush(); }
 
 	function scan_FourOfAKind() { 
 
 		var matchResults = [];
 
-		for ( var iter = 0 ; iter < 2 ; iter++ ) { 
+		for ( var iter = 0 ; iter < 5 ; iter++ ) { 
 
-			matchResults += seekMatches( iter );
+			if ( seekMatches( iter ).length == 4 ) { 
 
-			if ( matchResults.length == 4 ) { 
-
-				that.Values.Four_of_a_Kind.present = true;
-				that.Values.Four_of_a_Kind.composition = _.uniq( matchResults );
-
-				return true; 
+				matchResults.push( seekMatches( iter ));
 			}
 		}
-		return false; 
+
+		if ( matchResults.length >= 1 ) { 
+
+			that.Values.Four_of_a_Kind.present = true;
+			that.Values.Four_of_a_Kind.composition = cleanComposition( matchResults );
+			return true;
+		}
+
+		return false;
 	}
+
 	this.Scan_FourOfAKind = function() { return scan_FourOfAKind(); }
 
 	function scan_Straight() { 
@@ -108,13 +129,13 @@ var videoPokerLogic = function() {
 			 values[3] == ( values[4] + 1 ) )
 		{
 			that.Values.Straight.present = true;
-			that.Values.Straight.composition = [[0, 1, 2, 3, 4]];
+			that.Values.Straight.composition = [[1, 2, 3, 4, 5]];
 			return true;
 		}
 
 		return false; 
 	}
-	this.scan_Straight = function() { return scan_Straight(); }
+	this.Scan_Straight = function() { return scan_Straight(); }
 
 	function scan_Flush() { 
 
@@ -123,13 +144,13 @@ var videoPokerLogic = function() {
 
 		for ( var iter = 1 ; iter < that.sorted.length ; iter++ ) { 
 
-			if ( getSuitCode( that.sorted[iter] ) != initialSuit ) { flush = false; }
+			if ( getSuitCode( that.sorted[iter].code ) != initialSuit ) { flush = false; }
 		}
 
 		if ( flush ) { 
 
 			that.Values.Flush.present = true;
-			that.Values.Straight.composition = [[0, 1, 2, 3, 4]];
+			that.Values.Flush.composition = [[1, 2, 3, 4, 5]];
 			return true;
 		}
 
@@ -141,32 +162,10 @@ var videoPokerLogic = function() {
 
 		if ( scan_ThreeOfAKind() && scan_Pair() ) { 
 
-			// get the pair and 3oak positions
-			var compositionTOAK = that.Values.Three_of_a_Kind.composition;
-			var compositionPAIR = that.Values.Pair.composition;
+			that.Values.Full_House.present = true;
+			that.Values.Full_House.composition = [[1, 2, 3, 4, 5]];
 
-			// bring them together and filter out duplicates (the 3ofakind cant be the same cards as pair)
-			var compositionMerged = _.union( compositionTOAK, [compositionPAIR[0], compositionPAIR[1]] );
-			compositionMerged = _.uniq( compositionMerged );
-
-			if ( compositionMerged.length == 5 ) { 
-
-				that.Values.Full_House.present = true;
-				that.Values.Full_House.composition = [];
-				return true;
-			}
-
-			if ( compositionPAIR.length > 2 ) { 
-
-				compositionMerged = _.union( compositionTOAK, [compositionPAIR[2], compositionPAIR[3]] );
-				compositionMerged = _.uniq( compositionMerged);
-
-				if ( compositionMerged.length == 5 ) { 
-
-					that.Values.Full_House.present = true;
-					that.Values.Full_house.composition = [];
-				}
-			}
+			return true;
 		}
 
 		return false; 
@@ -177,54 +176,49 @@ var videoPokerLogic = function() {
 
 		var matchResults = [];
 
-		for ( var iter = 0 ; iter < 3 ; iter++ ) { 
+		for ( var iter = 0 ; iter < 5 ; iter++ ) { 
 
-			matchResults += seekMatches( iter );
+			if ( seekMatches( iter ).length == 3 ) { 
 
-			if ( matchResults.length >= 3 ) { 
-
-				that.Values.Three_of_a_Kind.present = true;
-				that.Values.Three_of_a_Kind.composition = _.uniq( matchResults );
-
-				return true; 
+				matchResults.push( seekMatches( iter ));
 			}
+		}
+
+		if ( matchResults.length >= 1 ) { 
+
+			that.Values.Three_of_a_Kind.present = true;
+			that.Values.Three_of_a_Kind.composition = cleanComposition( matchResults );
+			return true;
 		}
 
 		return false; 
 	}
 	this.Scan_ThreeOfAKind = function() { return scan_ThreeOfAKind(); };
 
+	// Scan hand for instances of Two Pairs.
 	function scan_TwoPair() { 
 
-		var matchResults = [];
+		scan_Pair();
 
-		for ( var iter = 0 ; iter < 5 ; iter++ ) { 
+		if ( that.Values.Pair.present && that.Values.Pair.composition.length == 2 ) {
 
-			if ( seekMatches( iter ) >= 2 ) { 
-
-				matchResults += seekMatches( iter );
-			}
-		}
-
-		if ( _.uniq( matchResults.length >= 4 ) ) { 
-
-			that.Values.Two_Pair.present = true;
-			that.Values.Two_Pari.composition = _.uniq( matchResults );
+			that.Values.Two_Pair.present = true;	
+			that.Values.Two_Pair.composition = that.Values.Pair.composition;
 			return true;
 		}
 
-		return false; 
+		return false;
 	}
 	this.Scan_TwoPair = function() { return scan_TwoPair(); }
 
+	// Scan hand for instances of a pair.
 	function scan_Pair() { 
 
 		var matchResults = [];
 
 		for ( var iter = 0 ; iter < 5 ; iter++ ) { 
 
-
-			if ( seekMatches( iter ).length >= 2 ) { 
+			if ( seekMatches( iter ).length == 2 ) { 
 
 				matchResults.push( seekMatches( iter ));
 			}
@@ -449,7 +443,5 @@ var videoPokerLogic = function() {
 		return hasIntegrity;
 	}
 }
-
-
 
 window.PokerBrain.Logic = new videoPokerLogic(); 
