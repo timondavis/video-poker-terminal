@@ -246,13 +246,13 @@ var videoPokerLogic = function() {
 
 		for ( var iter = 0 ; iter < 5 ; iter++ ) { 
 
-			/*if ( seekMatches( iter ).length == 2 ) {
+			if ( seekMatches( iter ).length == 2 ) {
 
 				matchResults.push( seekMatches( iter ));
-			}*/
+			}
 		}
 
-		if ( matchResults.length >= 1 ) { 
+		if ( matchResults.length > 2 ) {
 
 			that.Values.Pair.present = true;
 			that.Values.Pair.composition = cleanComposition( matchResults );
