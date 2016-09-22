@@ -252,6 +252,8 @@ var videoPokerLogic = function() {
 			}
 		}
 
+		// If we found at least one pair of matches, mark it in the system.  Note that 2 is the magic number
+		// card A would match card C, and card C would match card A, for example.  ( [ [ A, C ], [C, A] ] == 1 pair )
 		if ( matchResults.length > 2 ) {
 
 			that.Values.Pair.present = true;
